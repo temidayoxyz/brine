@@ -1,0 +1,212 @@
+---
+import '@fontsource-variable/fraunces/opsz.css';
+import '@fontsource-variable/newsreader/wght.css';
+import '@fontsource-variable/newsreader/wght-italic.css';
+import '@fontsource-variable/inter/wght.css';
+import frauncesLatin from '@fontsource-variable/fraunces/files/fraunces-latin-opsz-normal.woff2?url';
+import newsreaderLatin from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
+import '../styles/global.css';
+import { siteUrl } from '../config';
+import { site } from '../data/site';
+import { withBase } from '../lib/paths';
+import SearchDialog from '../components/SearchDialog.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  section?: string;
+  tags?: string[];
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title = 'Brine',
+  description = site.description,
+  image,
+  imageAlt,
+  type = 'website',
+  noindex = false,
+  publishedTime,
+  modifiedTime,
+  section,
+  tags = [],
+  jsonLd,
+} = Astro.props;
+
+const origin = Astro.site ?? new URL(siteUrl);
+const canonical = new URL(withBase(Astro.url.pathname), origin).href;
+const pageTitle =
+  title === 'Brine' ? 'Brine — A journal of attention, design & digital life' : `${title} — Brine`;
+const ogImage = new URL(withBase(image ?? '/og/brine-og.png'), origin).href;
+const ogImageAlt = imageAlt ?? 'Brine — a journal of attention, design and digital life';
+const robots = noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+const structuredData = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const safeStructuredData = JSON.stringify(structuredData).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f5f1e8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1412" media="(prefers-color-scheme: dark)" />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Brine Editorial" />
+    <meta name="robots" content={robots} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Brine" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_GB" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    {type === 'article' && publishedTime && (
+      <meta property="article:published_time" content={publishedTime.toISOString()} />
+    )}
+    {type === 'article' && modifiedTime && (
+      <meta property="article:modified_time" content={modifiedTime.toISOString()} />
+    )}
+    {type === 'article' && section && <meta property="article:section" content={section} />}
+    {type === 'article' && tags.map((tag) => <meta property="article:tag" content={tag} />)}
+
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon-32.png')} sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <link rel="manifest" href={withBase('/site.webmanifest')} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Brine — RSS"
+      href={withBase('/rss.xml')}
+    />
+    <link rel="sitemap" type="application/xml" href={withBase('/sitemap-index.xml')} />
+
+    <link
+      rel="preload"
+      href={frauncesLatin}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href={newsreaderLatin}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
+    <style is:inline>
+      html {
+        background: #f5f1e8;
+      }
+      html[data-theme='dark'] {
+        background: #0e1412;
+      }
+    </style>
+
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var preference = 'system';
+        var stored = null;
+
+        try {
+          stored = localStorage.getItem('brine-theme');
+        } catch (error) {
+          stored = null;
+        }
+
+        if (stored === 'light' || stored === 'dark' || stored === 'system') {
+          preference = stored;
+        }
+
+        var media = window.matchMedia('(prefers-color-scheme: dark)');
+        var resolved = preference === 'system' ? (media.matches ? 'dark' : 'light') : preference;
+
+        root.dataset.theme = resolved;
+        root.dataset.themePreference = preference;
+        root.style.colorScheme = resolved;
+        root.classList.add('js');
+      })();
+    </script>
+
+    {structuredData.length > 0 && (
+      <script type="application/ld+json" set:html={safeStructuredData} />
+    )}
+  </head>
+
+  <body id="top">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <SiteHeader />
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+    <SearchDialog />
+
+    <script>
+      const revealElements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+
+      if (revealElements.length > 0) {
+        const show = (element: Element) => element.classList.add('is-visible');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+          revealElements.forEach(show);
+        } else {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (entry.isIntersecting) {
+                  show(entry.target);
+                  observer.unobserve(entry.target);
+                }
+              }
+            },
+            { rootMargin: '0px 0px -8% 0px', threshold: 0.06 },
+          );
+
+          revealElements.forEach((element) => observer.observe(element));
+
+          window.setTimeout(() => {
+            revealElements.forEach((element) => {
+              if (element.getBoundingClientRect().top < window.innerHeight) show(element);
+            });
+          }, 1200);
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  main:focus {
+    outline: none;
+  }
+</style>

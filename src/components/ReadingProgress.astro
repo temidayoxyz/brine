@@ -1,0 +1,67 @@
+---
+---
+
+<div class="reading-progress" data-reading-progress aria-hidden="true">
+  <span class="reading-progress__bar" data-reading-progress-bar></span>
+</div>
+
+<style>
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 90;
+    width: 100%;
+    height: 2px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration) ease;
+  }
+
+  .reading-progress.is-visible {
+    opacity: 1;
+  }
+
+  .reading-progress__bar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    will-change: transform;
+  }
+</style>
+
+<script>
+  const progress = document.querySelector<HTMLElement>('[data-reading-progress]');
+  const bar = document.querySelector<HTMLElement>('[data-reading-progress-bar]');
+  const article = document.querySelector<HTMLElement>('[data-reading-article]');
+
+  if (progress && bar && article) {
+    let ticking = false;
+
+    const update = () => {
+      const rect = article.getBoundingClientRect();
+      const articleTop = window.scrollY + rect.top;
+      const start = articleTop - 90;
+      const end = articleTop + article.offsetHeight - window.innerHeight + 90;
+      const ratio = end > start ? (window.scrollY - start) / (end - start) : 0;
+      const clamped = Math.min(1, Math.max(0, ratio));
+
+      bar.style.transform = `scaleX(${clamped})`;
+      progress.classList.toggle('is-visible', clamped > 0.002 && clamped < 0.999);
+      ticking = false;
+    };
+
+    const requestUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+    update();
+  }
+</script>

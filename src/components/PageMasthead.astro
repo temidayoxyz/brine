@@ -1,0 +1,106 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  intro?: string;
+  meta?: string;
+}
+
+const { eyebrow, title, intro, meta } = Astro.props;
+---
+
+<header class="page-masthead">
+  <div class="container container--wide">
+    <div class="page-masthead__top" data-reveal>
+      <p class="eyebrow eyebrow--accent">
+        <span class="eyebrow__rule"></span>
+        {eyebrow}
+      </p>
+      {meta && <p class="page-masthead__meta">{meta}</p>}
+    </div>
+
+    <div class="page-masthead__grid">
+      <h1 class="page-masthead__title" data-reveal>{title}</h1>
+      {intro && (
+        <div class="page-masthead__intro" data-reveal style="--reveal-delay: 80ms">
+          <p>{intro}</p>
+          <slot name="aside" />
+        </div>
+      )}
+    </div>
+  </div>
+</header>
+
+<style>
+  .page-masthead {
+    padding-top: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .page-masthead__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .page-masthead__meta {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .page-masthead__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+    padding-top: clamp(1.75rem, 3.5vw, 3rem);
+  }
+
+  .page-masthead__title {
+    max-width: 14ch;
+    font-family: var(--font-display);
+    font-size: clamp(2.9rem, 2rem + 4vw, 5.4rem);
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: -0.038em;
+    text-wrap: balance;
+  }
+
+  .page-masthead__intro {
+    max-width: 28rem;
+    padding-bottom: 0.35rem;
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  @media (max-width: 800px) {
+    .page-masthead__grid {
+      grid-template-columns: 1fr;
+      gap: 1.4rem;
+      align-items: start;
+    }
+
+    .page-masthead__title {
+      max-width: 16ch;
+    }
+
+    .page-masthead__intro {
+      max-width: 34rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .page-masthead__meta {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,860 @@
+---
+import { withBase } from '../lib/paths';
+import Icon from './Icon.astro';
+import WaveMark from './WaveMark.astro';
+
+const suggestions = ['attention', 'design', 'internet', 'reading', 'ritual'];
+---
+
+<dialog
+  class="search-dialog"
+  id="search-dialog"
+  data-search-dialog
+  aria-labelledby="search-title"
+>
+  <div class="search-panel">
+    <h2 class="visually-hidden" id="search-title">Search Brine</h2>
+
+    <div class="search-field">
+      <Icon name="search" size={20} class="search-field__icon" />
+      <label class="visually-hidden" for="search-input">Search stories</label>
+      <input
+        id="search-input"
+        data-search-input
+        type="search"
+        placeholder="Search stories, topics, ideas…"
+        autocomplete="off"
+        spellcheck="false"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded="false"
+        aria-controls="search-results"
+        aria-describedby="search-hint"
+      />
+      <kbd class="search-field__esc" aria-hidden="true">Esc</kbd>
+      <button type="button" class="search-close" data-search-close aria-label="Close search">
+        <Icon name="close" size={19} />
+      </button>
+    </div>
+
+    <div class="search-body">
+      <div class="search-start" data-search-start>
+        <p class="search-label">Try a topic or an idea</p>
+        <div class="search-suggestions">
+          {suggestions.map((suggestion) => (
+            <button type="button" data-search-suggestion={suggestion}>{suggestion}</button>
+          ))}
+        </div>
+        <p class="search-note">
+          Search every story by title, topic, or phrase. The index lives on this page — no account,
+          no tracking.
+        </p>
+      </div>
+
+      <div class="search-loading" data-search-loading hidden>
+        <span class="search-loading__line" aria-hidden="true"></span>
+        <p>Searching the journal…</p>
+      </div>
+
+      <ul
+        class="search-results"
+        id="search-results"
+        data-search-results
+        role="listbox"
+        aria-label="Search results"
+        hidden
+      >
+      </ul>
+
+      <div class="search-empty" data-search-empty hidden>
+        <WaveMark class="search-empty__mark" />
+        <p class="search-empty__title">No stories found</p>
+        <p class="search-empty__copy" data-search-empty-copy>
+          Try a broader phrase, or browse the journal by topic.
+        </p>
+        <div class="search-empty__links">
+          <a class="text-link" href={withBase('/journal/')}>
+            Browse the journal
+            <Icon name="arrow-right" size={15} />
+          </a>
+          <a class="text-link" href={withBase('/topics/')}>
+            All topics
+            <Icon name="arrow-up-right" size={15} />
+          </a>
+        </div>
+      </div>
+
+      <div class="search-error" data-search-error hidden>
+        <p class="search-error__title">Search is unavailable right now.</p>
+        <p class="search-error__copy">
+          The index could not be loaded. You can still browse every story by topic.
+        </p>
+        <div class="search-empty__links">
+          <a class="text-link" href={withBase('/journal/')}>
+            Browse the journal
+            <Icon name="arrow-right" size={15} />
+          </a>
+          <a class="text-link" href={withBase('/topics/')}>
+            All topics
+            <Icon name="arrow-up-right" size={15} />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="search-footer">
+      <p class="search-hint" id="search-hint">
+        <span class="search-hint__desktop">
+          <kbd>↑</kbd><kbd>↓</kbd> to move <span aria-hidden="true">·</span> <kbd>Enter</kbd> to
+          open <span aria-hidden="true">·</span> <kbd>Esc</kbd> to close
+        </span>
+        <span class="search-hint__mobile">Search by title, topic, or phrase</span>
+      </p>
+      <p class="search-count" data-search-count role="status" aria-live="polite"></p>
+    </footer>
+  </div>
+</dialog>
+
+<style>
+  .search-dialog {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: clamp(1rem, 8vh, 5rem) 1rem 2rem;
+    border: 0;
+    background: transparent;
+    overflow-y: auto;
+  }
+
+  .search-dialog::backdrop {
+    background: rgba(18, 35, 30, 0.72);
+    background: color-mix(in srgb, var(--band-bg) 72%, transparent);
+  }
+
+  .search-panel {
+    width: min(47rem, 100%);
+    margin: 0 auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    box-shadow: var(--shadow-dialog);
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .search-dialog[open] .search-panel {
+      animation: search-in 240ms var(--ease-out) both;
+    }
+  }
+
+  @keyframes search-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.995);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .search-field {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 4.25rem;
+    padding: 0.75rem 0.85rem 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  :global(.search-field__icon) {
+    flex: none;
+    color: var(--accent);
+  }
+
+  .search-field input {
+    flex: 1;
+    min-width: 0;
+    height: 2.75rem;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem);
+    color: var(--ink);
+  }
+
+  .search-field input::placeholder {
+    color: var(--muted);
+    opacity: 1;
+  }
+
+  .search-field input::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  .search-field__esc {
+    flex: none;
+    padding: 0.25rem 0.4rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    color: var(--muted);
+    background: var(--surface-2);
+  }
+
+  .search-close {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: none;
+    border-radius: var(--radius-xs);
+    color: var(--ink-2);
+    transition:
+      background-color var(--duration-fast) ease,
+      color var(--duration-fast) ease;
+  }
+
+  .search-close:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  .search-body {
+    min-height: 14rem;
+    max-height: min(55vh, 32rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .search-start,
+  .search-loading,
+  .search-empty,
+  .search-error {
+    padding: 1.6rem 1.5rem 1.8rem;
+  }
+
+  .search-label {
+    margin-bottom: 0.8rem;
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .search-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .search-suggestions button {
+    min-height: 2.2rem;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    background: transparent;
+    transition:
+      border-color var(--duration-fast) ease,
+      color var(--duration-fast) ease,
+      background-color var(--duration-fast) ease;
+  }
+
+  .search-suggestions button:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  .search-note {
+    margin-top: 1.5rem;
+    max-width: 34rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .search-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 14rem;
+    color: var(--muted);
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+  }
+
+  .search-loading[hidden] {
+    display: none;
+  }
+
+  .search-loading__line {
+    width: 7rem;
+    height: 1px;
+    background: var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .search-loading__line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform-origin: left;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .search-loading__line::after {
+      animation: loading-line 1.2s var(--ease-in-out) infinite;
+    }
+  }
+
+  @keyframes loading-line {
+    0% {
+      transform: scaleX(0);
+      opacity: 0.4;
+    }
+    50% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleX(1) translateX(100%);
+      opacity: 0.4;
+    }
+  }
+
+  .search-results {
+    padding: 0.4rem;
+  }
+
+  .search-results[hidden] {
+    display: none;
+  }
+
+  :global(.search-result) {
+    display: block;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) ease;
+  }
+
+  :global(.search-result.is-active) {
+    background: var(--accent-soft);
+  }
+
+  :global(.search-result__meta) {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.35rem;
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    line-height: 1.3;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  :global(.search-result__meta span) {
+    color: var(--muted);
+    letter-spacing: 0;
+  }
+
+  :global(.search-result__title) {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+
+  :global(.search-result__excerpt) {
+    display: block;
+    margin-top: 0.3rem;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  :global(.search-result mark) {
+    padding: 0 0.05em;
+    background: var(--accent-soft);
+    color: var(--ink);
+    border-radius: 1px;
+  }
+
+  .search-empty,
+  .search-error {
+    text-align: center;
+    padding-top: 2.4rem;
+    padding-bottom: 2.6rem;
+  }
+
+  .search-empty__mark {
+    width: 2rem;
+    height: 2rem;
+    margin: 0 auto 1rem;
+    color: var(--accent);
+    opacity: 0.8;
+  }
+
+  .search-empty__title,
+  .search-error__title {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .search-empty__copy,
+  .search-error__copy {
+    max-width: 27rem;
+    margin: 0.55rem auto 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .search-empty__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: 1.4rem;
+  }
+
+  .search-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 2.8rem;
+    padding: 0.6rem 1.25rem;
+    border-top: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+
+  .search-hint {
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    color: var(--muted);
+  }
+
+  .search-hint kbd {
+    display: inline-block;
+    min-width: 1.1rem;
+    padding: 0.08rem 0.24rem;
+    margin-inline: 0.08rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: var(--surface);
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    line-height: 1.4;
+    text-align: center;
+    color: var(--ink-2);
+  }
+
+  .search-hint__mobile {
+    display: none;
+  }
+
+  .search-count {
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .search-dialog {
+      padding: 0.75rem 0.75rem 1rem;
+    }
+
+    .search-panel {
+      border-radius: var(--radius-xs);
+    }
+
+    .search-field {
+      min-height: 3.75rem;
+      padding: 0.6rem 0.55rem 0.6rem 1rem;
+      gap: 0.6rem;
+    }
+
+    .search-field__esc {
+      display: none;
+    }
+
+    .search-body {
+      max-height: calc(100svh - 12rem);
+    }
+
+    .search-footer {
+      padding-inline: 1rem;
+    }
+
+    .search-hint__desktop {
+      display: none;
+    }
+
+    .search-hint__mobile {
+      display: inline;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .search-loading__line::after {
+      transform: scaleX(0.4);
+      opacity: 0.6;
+    }
+  }
+</style>
+
+<script>
+  import { withBase } from '../lib/paths';
+  import { searchArticles, type SearchRecord } from '../lib/search';
+
+  const dialog = document.querySelector<HTMLDialogElement>('[data-search-dialog]');
+
+  if (dialog) {
+    const input = dialog.querySelector<HTMLInputElement>('[data-search-input]');
+    const closeButton = dialog.querySelector<HTMLButtonElement>('[data-search-close]');
+    const startPanel = dialog.querySelector<HTMLElement>('[data-search-start]');
+    const loadingPanel = dialog.querySelector<HTMLElement>('[data-search-loading]');
+    const resultsList = dialog.querySelector<HTMLUListElement>('[data-search-results]');
+    const emptyPanel = dialog.querySelector<HTMLElement>('[data-search-empty]');
+    const emptyCopy = dialog.querySelector<HTMLElement>('[data-search-empty-copy]');
+    const errorPanel = dialog.querySelector<HTMLElement>('[data-search-error]');
+    const count = dialog.querySelector<HTMLElement>('[data-search-count]');
+    const suggestions = dialog.querySelectorAll<HTMLButtonElement>('[data-search-suggestion]');
+
+    let records: SearchRecord[] | null = null;
+    let loadPromise: Promise<SearchRecord[]> | null = null;
+    let activeIndex = -1;
+    let searchTimer: number | undefined;
+    let lastTrigger: HTMLElement | null = null;
+
+    const escapeHtml = (value: string) =>
+      value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+    const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    const highlight = (value: string, terms: string[]) => {
+      const escaped = escapeHtml(value);
+      if (terms.length === 0) return escaped;
+      const pattern = new RegExp(`(${terms.map(escapeRegExp).join('|')})`, 'gi');
+      return escaped.replace(pattern, '<mark>$1</mark>');
+    };
+
+    const truncate = (value: string, length: number) =>
+      value.length > length ? `${value.slice(0, length).trimEnd()}…` : value;
+
+    const getTerms = (value: string) =>
+      value
+        .trim()
+        .split(/\s+/)
+        .filter((term) => term.length > 0);
+
+    const setExpanded = (expanded: boolean) => {
+      input?.setAttribute('aria-expanded', String(expanded));
+      if (!expanded) input?.removeAttribute('aria-activedescendant');
+    };
+
+    const hidePanels = () => {
+      if (startPanel) startPanel.hidden = true;
+      if (loadingPanel) loadingPanel.hidden = true;
+      if (resultsList) resultsList.hidden = true;
+      if (emptyPanel) emptyPanel.hidden = true;
+      if (errorPanel) errorPanel.hidden = true;
+      setExpanded(false);
+    };
+
+    const showStart = () => {
+      hidePanels();
+      if (startPanel) startPanel.hidden = false;
+      if (count) count.textContent = '';
+      activeIndex = -1;
+    };
+
+    const showLoading = () => {
+      hidePanels();
+      if (loadingPanel) loadingPanel.hidden = false;
+      if (count) count.textContent = 'Searching…';
+      activeIndex = -1;
+    };
+
+    const showError = () => {
+      hidePanels();
+      if (errorPanel) errorPanel.hidden = false;
+      if (count) count.textContent = 'Search unavailable';
+      activeIndex = -1;
+    };
+
+    const loadIndex = () => {
+      if (!loadPromise) {
+        loadPromise = fetch(withBase('/search.json'), { headers: { Accept: 'application/json' } })
+          .then((response) => {
+            if (!response.ok) throw new Error(`Search index request failed: ${response.status}`);
+            return response.json();
+          })
+          .then((data) => {
+            if (!Array.isArray(data)) throw new Error('Search index is not an array');
+            records = data as SearchRecord[];
+            return records;
+          });
+      }
+      return loadPromise;
+    };
+
+    const setActive = (index: number) => {
+      if (!resultsList) return;
+      const items = Array.from(
+        resultsList.querySelectorAll<HTMLElement>('[data-search-result]'),
+      );
+      if (items.length === 0) {
+        activeIndex = -1;
+        setExpanded(false);
+        return;
+      }
+
+      activeIndex = (index + items.length) % items.length;
+      items.forEach((item, itemIndex) => {
+        const isActive = itemIndex === activeIndex;
+        item.classList.toggle('is-active', isActive);
+        item.setAttribute('aria-selected', String(isActive));
+      });
+
+      const activeItem = items[activeIndex];
+      input?.setAttribute('aria-activedescendant', activeItem.id);
+      activeItem.scrollIntoView({ block: 'nearest' });
+    };
+
+    const openResult = (item: HTMLElement) => {
+      const href = item.dataset.href;
+      if (!href) return;
+      window.location.href = href;
+    };
+
+    const renderResults = (query: string) => {
+      if (!records || !resultsList) return;
+      const trimmed = query.trim();
+      const terms = getTerms(trimmed);
+      const results = searchArticles(records, trimmed, 8);
+
+      hidePanels();
+      activeIndex = -1;
+
+      if (results.length === 0) {
+        if (emptyPanel) emptyPanel.hidden = false;
+        if (emptyCopy) {
+          emptyCopy.textContent = `No stories match “${trimmed}”. Try a broader phrase, or browse the journal by topic.`;
+        }
+        if (count) count.textContent = 'No stories found';
+        return;
+      }
+
+      resultsList.innerHTML = results
+        .map((result, index) => {
+          const href = withBase(`/journal/${result.slug}/`);
+
+          return `
+            <li
+              class="search-result"
+              id="search-result-${index}"
+              role="option"
+              aria-selected="false"
+              data-search-result
+              data-href="${escapeHtml(href)}"
+            >
+              <span class="search-result__meta">
+                ${escapeHtml(result.categoryName)}
+                <span aria-hidden="true">·</span>
+                ${result.readingTime} min read
+              </span>
+              <span class="search-result__title">${highlight(result.title, terms)}</span>
+              <span class="search-result__excerpt">${highlight(truncate(result.description, 160), terms)}</span>
+            </li>
+          `;
+        })
+        .join('');
+
+      resultsList.hidden = false;
+      setExpanded(true);
+      setActive(0);
+      if (count) count.textContent = `${results.length} ${results.length === 1 ? 'story' : 'stories'}`;
+    };
+
+    const runSearch = async () => {
+      if (!input) return;
+      const query = input.value.trim();
+
+      if (query.length < 2) {
+        showStart();
+        return;
+      }
+
+      if (!records) {
+        showLoading();
+        try {
+          await loadIndex();
+        } catch {
+          showError();
+          return;
+        }
+      }
+
+      renderResults(query);
+    };
+
+    const openDialog = (trigger?: HTMLElement) => {
+      if (dialog.open) return;
+      lastTrigger = trigger ?? null;
+      dialog.showModal();
+      document.documentElement.classList.add('search-open');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      showStart();
+      loadIndex().catch(() => {
+        /* The error is surfaced only when a search is attempted. */
+      });
+    };
+
+    for (const trigger of document.querySelectorAll<HTMLElement>('[data-search-open]')) {
+      trigger.addEventListener('click', (event) => {
+        const mouseEvent = event as MouseEvent;
+        if (mouseEvent.metaKey || mouseEvent.ctrlKey || mouseEvent.shiftKey || mouseEvent.altKey) {
+          return;
+        }
+        event.preventDefault();
+        openDialog(trigger);
+      });
+    }
+
+    closeButton?.addEventListener('click', () => dialog.close());
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      dialog.close();
+    });
+
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      dialog.close();
+    });
+
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('search-open');
+      if (searchTimer) window.clearTimeout(searchTimer);
+      lastTrigger?.focus();
+      lastTrigger = null;
+    });
+
+    input?.addEventListener('input', () => {
+      if (searchTimer) window.clearTimeout(searchTimer);
+      searchTimer = window.setTimeout(() => {
+        void runSearch();
+      }, 80);
+    });
+
+    input?.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        if (!resultsList || resultsList.hidden) return;
+        event.preventDefault();
+        setActive(activeIndex + (event.key === 'ArrowDown' ? 1 : -1));
+        return;
+      }
+
+      if (event.key === 'Enter') {
+        if (!resultsList || resultsList.hidden) return;
+        const activeItem = resultsList.querySelector<HTMLElement>(
+          '.search-result.is-active',
+        );
+        if (activeItem) {
+          event.preventDefault();
+          openResult(activeItem);
+        }
+      }
+    });
+
+    resultsList?.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const item = target.closest<HTMLElement>('[data-search-result]');
+      if (item) openResult(item);
+    });
+
+    resultsList?.addEventListener('mousemove', (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const item = target.closest<HTMLElement>('[data-search-result]');
+      if (!item) return;
+      const items = Array.from(resultsList.querySelectorAll('[data-search-result]'));
+      const index = items.indexOf(item);
+      if (index !== -1 && index !== activeIndex) setActive(index);
+    });
+
+    suggestions.forEach((suggestion) => {
+      suggestion.addEventListener('click', () => {
+        if (!input) return;
+        input.value = suggestion.dataset.searchSuggestion ?? '';
+        input.focus();
+        void runSearch();
+      });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const target = event.target;
+      const targetInClosedDialog =
+        target instanceof Node && dialog.contains(target) && !dialog.open;
+      const isEditable =
+        !targetInClosedDialog &&
+        (target instanceof HTMLInputElement ||
+          target instanceof HTMLTextAreaElement ||
+          (target instanceof HTMLElement && target.isContentEditable));
+
+      if ((event.key === '/' && !isEditable) || ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k')) {
+        event.preventDefault();
+        openDialog();
+      }
+    });
+  }
+</script>

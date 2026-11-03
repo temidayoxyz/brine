@@ -1,0 +1,141 @@
+---
+import { withBase } from '../lib/paths';
+import Icon from './Icon.astro';
+import WaveMark from './WaveMark.astro';
+---
+
+<section class="editorial-note" aria-labelledby="editorial-note-title">
+  <WaveMark class="editorial-note__mark" />
+  <div class="container container--wide editorial-note__inner">
+    <div class="editorial-note__side" data-reveal>
+      <p class="eyebrow editorial-note__eyebrow">A note from the editors</p>
+      <p class="editorial-note__issue">Brine <span aria-hidden="true">·</span> Issue 04</p>
+    </div>
+
+    <div class="editorial-note__body" data-reveal style="--reveal-delay: 80ms">
+      <h2 class="editorial-note__title" id="editorial-note-title">
+        We are not trying to win your attention. We are trying to give it back.
+      </h2>
+      <p class="editorial-note__copy">
+        Brine is an independent journal for people who would rather think than scroll. We publish
+        essays about attention, design, and the texture of digital life — slowly, and with care. No
+        infinite feed. No algorithm deciding what you read next. Just a small, considered place to
+        spend a little time.
+      </p>
+      <a class="editorial-note__link" href={withBase('/about/')}>
+        Read our point of view
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .editorial-note {
+    position: relative;
+    overflow: hidden;
+    margin-top: var(--section-space);
+    background: var(--band-bg);
+    color: var(--band-ink);
+  }
+
+  .editorial-note__mark {
+    position: absolute;
+    right: -4rem;
+    bottom: -5rem;
+    width: 26rem;
+    height: 26rem;
+    color: var(--band-ink);
+    opacity: 0.055;
+    pointer-events: none;
+  }
+
+  .editorial-note__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.5fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    padding-block: clamp(3.5rem, 7vw, 6.5rem);
+  }
+
+  .editorial-note__eyebrow {
+    color: var(--band-muted);
+  }
+
+  .editorial-note__issue {
+    margin-top: 0.8rem;
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--band-muted);
+    opacity: 0.75;
+  }
+
+  .editorial-note__body {
+    max-width: 44rem;
+  }
+
+  .editorial-note__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.95rem, 1.45rem + 2.2vw, 3.4rem);
+    font-weight: 450;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--band-ink);
+    text-wrap: balance;
+  }
+
+  .editorial-note__copy {
+    max-width: 38rem;
+    margin-top: 1.4rem;
+    font-family: var(--font-body);
+    font-size: 1.08rem;
+    line-height: 1.65;
+    color: var(--band-muted);
+  }
+
+  .editorial-note__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--band-muted);
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--band-ink);
+    transition:
+      color var(--duration-fast) ease,
+      border-color var(--duration-fast) ease;
+  }
+
+  .editorial-note__link svg {
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .editorial-note__link:hover {
+    color: var(--band-muted);
+    border-color: var(--band-muted);
+  }
+
+  .editorial-note__link:hover svg {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 800px) {
+    .editorial-note__inner {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .editorial-note__mark {
+      width: 18rem;
+      height: 18rem;
+      right: -5rem;
+      bottom: -4rem;
+    }
+  }
+</style>

@@ -1,0 +1,126 @@
+---
+export type IconName =
+  | 'search'
+  | 'close'
+  | 'arrow-right'
+  | 'arrow-up-right'
+  | 'arrow-left'
+  | 'arrow-up'
+  | 'chevron-down'
+  | 'menu'
+  | 'copy'
+  | 'check'
+  | 'sun'
+  | 'moon'
+  | 'monitor'
+  | 'rss'
+  | 'link'
+  | 'clock';
+
+interface Props {
+  name: IconName;
+  size?: number;
+  class?: string;
+  strokeWidth?: number;
+}
+
+const { name, size = 18, class: className = '', strokeWidth = 1.6 } = Astro.props;
+---
+
+<svg
+  class={className}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {name === 'search' && (
+    <>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="m16 16 4.25 4.25" />
+    </>
+  )}
+  {name === 'close' && (
+    <>
+      <path d="m6 6 12 12" />
+      <path d="M18 6 6 18" />
+    </>
+  )}
+  {name === 'arrow-right' && (
+    <>
+      <path d="M4.5 12h15" />
+      <path d="m13.5 6 6 6-6 6" />
+    </>
+  )}
+  {name === 'arrow-up-right' && (
+    <>
+      <path d="M6.5 17.5 17.5 6.5" />
+      <path d="M8 6.5h9.5V16" />
+    </>
+  )}
+  {name === 'arrow-left' && (
+    <>
+      <path d="M19.5 12h-15" />
+      <path d="m10.5 6-6 6 6 6" />
+    </>
+  )}
+  {name === 'arrow-up' && (
+    <>
+      <path d="M12 19.5v-15" />
+      <path d="m6 10.5 6-6 6 6" />
+    </>
+  )}
+  {name === 'chevron-down' && <path d="m6 9 6 6 6-6" />}
+  {name === 'menu' && (
+    <>
+      <path d="M3.5 7.5h17" />
+      <path d="M3.5 12h17" />
+      <path d="M3.5 16.5h11" />
+    </>
+  )}
+  {name === 'copy' && (
+    <>
+      <rect x="9" y="9" width="10.5" height="10.5" rx="1.5" />
+      <path d="M15 6.5V5.5A1.5 1.5 0 0 0 13.5 4h-8A1.5 1.5 0 0 0 4 5.5v8A1.5 1.5 0 0 0 5.5 15h1" />
+    </>
+  )}
+  {name === 'check' && <path d="m5 12.5 4.5 4.5L19 7" />}
+  {name === 'sun' && (
+    <>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2.5v2M12 19.5v2M4.3 4.3l1.4 1.4M18.3 18.3l1.4 1.4M2.5 12h2M19.5 12h2M4.3 19.7l1.4-1.4M18.3 5.7l1.4-1.4" />
+    </>
+  )}
+  {name === 'moon' && <path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2Z" />}
+  {name === 'monitor' && (
+    <>
+      <rect x="3.5" y="4.5" width="17" height="12" rx="1.5" />
+      <path d="M9 20.5h6M12 16.5v4" />
+    </>
+  )}
+  {name === 'rss' && (
+    <>
+      <circle cx="6" cy="18" r="1.2" fill="currentColor" stroke="none" />
+      <path d="M4.5 11.5a8 8 0 0 1 8 8" />
+      <path d="M4.5 5.5a14 14 0 0 1 14 14" />
+    </>
+  )}
+  {name === 'link' && (
+    <>
+      <path d="M10.5 13.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.7 1.7" />
+      <path d="M13.5 10.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.7-1.7" />
+    </>
+  )}
+  {name === 'clock' && (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5V12l3 2" />
+    </>
+  )}
+</svg>

@@ -1,0 +1,230 @@
+---
+import { Image } from 'astro:assets';
+import type { Article } from '../lib/articles';
+import { articleUrl, getArticleTopic, topicUrl } from '../lib/articles';
+import ArticleMeta from './ArticleMeta.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const topic = getArticleTopic(article);
+const href = articleUrl(article);
+---
+
+<section class="featured" aria-labelledby="featured-title">
+  <div class="container container--wide">
+    <div class="featured__head" data-reveal>
+      <p class="eyebrow eyebrow--accent">
+        <span class="eyebrow__rule"></span>
+        Cover story
+      </p>
+      <p class="featured__issue">Issue 04 <span aria-hidden="true">/</span> The Quiet Issue</p>
+    </div>
+
+    <div class="featured__grid">
+      <a
+        class="featured__media"
+        href={href}
+        aria-label={`Read “${article.data.title}”`}
+        data-reveal
+      >
+        <Image
+          class="featured__image"
+          src={article.data.cover}
+          alt={article.data.coverAlt}
+          widths={[720, 1080, 1440, 1800]}
+          sizes="(max-width: 900px) 100vw, 58vw"
+          quality={85}
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          style={`object-position: ${article.data.coverPosition}`}
+        />
+      </a>
+
+      <div class="featured__body" data-reveal style="--reveal-delay: 90ms">
+        <a class="kicker" href={topicUrl(topic.slug)}>{topic.name}</a>
+
+        <h2 class="featured__title" id="featured-title">
+          <a href={href}>{article.data.title}</a>
+        </h2>
+
+        <p class="featured__standfirst">{article.data.description}</p>
+
+        <div class="featured__meta">
+          <ArticleMeta article={article} showCategory={false} showAuthor />
+        </div>
+
+        <a class="featured__cta" href={href}>
+          Read the story
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured {
+    padding-top: clamp(3rem, 6vw, 5.5rem);
+  }
+
+  .featured__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .featured__issue {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .featured__issue span {
+    margin-inline: 0.2rem;
+    color: var(--line-strong);
+  }
+
+  .featured__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .featured__media {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-xs);
+    background: var(--surface-2);
+    aspect-ratio: 4 / 3;
+  }
+
+  .featured__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1100ms var(--ease-out);
+  }
+
+  .featured__media:hover .featured__image {
+    transform: scale(1.018);
+  }
+
+  .featured__body {
+    padding-block: 0.5rem;
+  }
+
+  .featured__title {
+    margin-top: 0.9rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.35rem, 1.8rem + 2.6vw, 3.9rem);
+    font-weight: 500;
+    line-height: 1.01;
+    letter-spacing: -0.032em;
+    text-wrap: balance;
+  }
+
+  .featured__title a {
+    transition: color var(--duration-fast) ease;
+  }
+
+  .featured__title a:hover {
+    color: var(--accent);
+  }
+
+  .featured__standfirst {
+    max-width: 34rem;
+    margin-top: 1.2rem;
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 1rem + 0.25vw, 1.2rem);
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+
+  .featured__meta {
+    margin-top: 1.35rem;
+  }
+
+  .featured__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 1.7rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--ink);
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition:
+      color var(--duration-fast) ease,
+      border-color var(--duration-fast) ease;
+  }
+
+  .featured__cta svg {
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .featured__cta:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .featured__cta:hover svg {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 900px) {
+    .featured__grid {
+      grid-template-columns: 1fr;
+      gap: 1.6rem;
+    }
+
+    .featured__media {
+      aspect-ratio: 3 / 2;
+    }
+
+    .featured__title {
+      font-size: clamp(2.2rem, 1.5rem + 3.4vw, 3rem);
+    }
+
+    .featured__body {
+      max-width: 38rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .featured__issue {
+      display: none;
+    }
+
+    .featured__head {
+      margin-bottom: 1.25rem;
+    }
+
+    .featured__media {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .featured__image {
+      transition: none;
+    }
+  }
+</style>

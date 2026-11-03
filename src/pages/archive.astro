@@ -1,0 +1,359 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import PageMasthead from '../components/PageMasthead.astro';
+import {
+  articleCountLabel,
+  articleUrl,
+  estimateReadingTime,
+  formatReadingTime,
+  getArticleTopic,
+  getPublishedArticles,
+  groupArticlesByYear,
+} from '../lib/articles';
+import { absoluteUrl, withBase } from '../lib/paths';
+
+const articles = await getPublishedArticles();
+const years = groupArticlesByYear(articles);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Archive — Brine',
+  description: 'The complete archive of Brine, grouped by year and month.',
+  url: absoluteUrl('/archive/'),
+  inLanguage: 'en-GB',
+  hasPart: articles.map((article) => ({
+    '@type': 'Article',
+    headline: article.data.title,
+    url: absoluteUrl(articleUrl(article)),
+    datePublished: article.data.publishedAt.toISOString(),
+  })),
+};
+---
+
+<BaseLayout
+  title="Archive"
+  description="The complete archive of Brine — every essay, grouped by year and month."
+  jsonLd={jsonLd}
+>
+  <PageMasthead
+    eyebrow="Archive"
+    title="Everything, in order."
+    intro="The complete archive, grouped by the month it was published. A record of what we were thinking about, and when."
+    meta={`${articleCountLabel(articles.length)} · ${years.length} ${years.length === 1 ? 'year' : 'years'}`}
+  >
+    <Fragment slot="aside">
+      <a class="text-link masthead-link" href={withBase('/rss.xml')}>
+        Follow by RSS
+        <Icon name="rss" size={15} />
+      </a>
+    </Fragment>
+  </PageMasthead>
+
+  <section class="archive" aria-labelledby="archive-list-title">
+    <div class="container container--wide">
+      <h2 class="visually-hidden" id="archive-list-title">All stories by date</h2>
+
+      {years.map((year, yearIndex) => (
+        <section class="archive-year" id={`year-${year.year}`} aria-labelledby={`year-title-${year.year}`}>
+          <div class="archive-year__label" data-reveal>
+            <h2 class="archive-year__number" id={`year-title-${year.year}`}>{year.year}</h2>
+            <p class="archive-year__count">{articleCountLabel(year.count)}</p>
+            {yearIndex === 0 && <span class="archive-year__marker">Current</span>}
+          </div>
+
+          <div class="archive-year__months">
+            {year.months.map((month) => (
+              <div class="archive-month">
+                <div class="archive-month__head">
+                  <h3 class="archive-month__title">{month.label}</h3>
+                  <span class="archive-month__count">{month.articles.length}</span>
+                </div>
+                <ul class="archive-month__list">
+                  {month.articles.map((article) => {
+                    const topic = getArticleTopic(article);
+                    return (
+                      <li>
+                        <a class="archive-row" href={articleUrl(article)}>
+                          <time
+                            class="archive-row__day"
+                            datetime={article.data.publishedAt.toISOString()}
+                          >
+                            {String(article.data.publishedAt.getUTCDate()).padStart(2, '0')}
+                          </time>
+                          <span class="archive-row__body">
+                            <span class="archive-row__title">{article.data.title}</span>
+                            <span class="archive-row__meta">
+                              {topic.name}
+                              <span aria-hidden="true">·</span>
+                              {formatReadingTime(estimateReadingTime(article.body))}
+                            </span>
+                          </span>
+                          <Icon name="arrow-up-right" size={15} class="archive-row__arrow" />
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="archive-cta" aria-labelledby="archive-cta-title">
+    <div class="container container--wide archive-cta__inner">
+      <div>
+        <p class="eyebrow">New to the journal?</p>
+        <h2 class="archive-cta__title" id="archive-cta-title">Start with the cover story.</h2>
+      </div>
+      <a class="btn" href={withBase('/journal/the-quiet-architecture-of-attention/')}>
+        Read the cover story
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .masthead-link {
+    margin-top: 1.4rem;
+  }
+
+  .archive {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .archive-year {
+    display: grid;
+    grid-template-columns: minmax(0, 0.35fr) minmax(0, 1.65fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .archive-year__label {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+    align-self: start;
+  }
+
+  .archive-year__number {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 2rem + 4vw, 5.5rem);
+    font-weight: 480;
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: var(--ink);
+  }
+
+  .archive-year__count {
+    margin-top: 0.55rem;
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .archive-year__marker {
+    display: inline-block;
+    margin-top: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-ui);
+    font-size: 0.5625rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .archive-year__months {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+
+  .archive-month__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .archive-month__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.85rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+
+  .archive-month__count {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    color: var(--muted);
+  }
+
+  .archive-month__list {
+    border-top: 1px solid transparent;
+  }
+
+  .archive-month__list li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .archive-month__list li:last-child {
+    border-bottom: 0;
+  }
+
+  .archive-row {
+    display: grid;
+    grid-template-columns: 2.2rem minmax(0, 1fr) 1rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.95rem 0.4rem;
+    margin-inline: -0.4rem;
+    border-radius: var(--radius-xs);
+    transition: background-color var(--duration-fast) ease;
+  }
+
+  .archive-row:hover {
+    background: var(--accent-soft);
+  }
+
+  .archive-row__day {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+  }
+
+  .archive-row__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .archive-row__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 1.05rem + 0.3vw, 1.35rem);
+    font-weight: 500;
+    line-height: 1.18;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .archive-row:hover .archive-row__title {
+    color: var(--accent);
+  }
+
+  .archive-row__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    color: var(--muted);
+  }
+
+  :global(.archive-row__arrow) {
+    color: var(--muted);
+    transition:
+      transform var(--duration) var(--ease-out),
+      color var(--duration-fast) ease;
+  }
+
+  .archive-row:hover :global(.archive-row__arrow) {
+    transform: translate(2px, -2px);
+    color: var(--accent);
+  }
+
+  .archive-cta {
+    margin-top: var(--section-space);
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    background: var(--band-bg);
+    color: var(--band-ink);
+  }
+
+  .archive-cta__inner {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .archive-cta .eyebrow {
+    color: var(--band-muted);
+  }
+
+  .archive-cta__title {
+    margin-top: 0.7rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.8rem);
+    font-weight: 450;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--band-ink);
+  }
+
+  .archive-cta .btn {
+    background: var(--band-ink);
+    color: var(--band-bg);
+  }
+
+  .archive-cta .btn:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  @media (max-width: 800px) {
+    .archive-year {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .archive-year__label {
+      position: static;
+      display: flex;
+      align-items: baseline;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .archive-year__number {
+      font-size: 3rem;
+    }
+
+    .archive-year__count,
+    .archive-year__marker {
+      margin-top: 0;
+    }
+
+    .archive-cta__inner {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .archive-row {
+      grid-template-columns: 1.6rem minmax(0, 1fr) 1rem;
+      gap: 0.65rem;
+    }
+
+    .archive-row__meta span {
+      display: none;
+    }
+  }
+</style>

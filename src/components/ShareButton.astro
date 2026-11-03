@@ -1,0 +1,143 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  url: string;
+  title: string;
+}
+
+const { url, title } = Astro.props;
+---
+
+<div class="share">
+  <button
+    class="share-button"
+    type="button"
+    data-copy-link
+    data-url={url}
+    data-title={title}
+    aria-describedby="copy-status"
+  >
+    <Icon name="copy" size={15} class="share-button__icon share-button__icon--copy" />
+    <Icon name="check" size={15} class="share-button__icon share-button__icon--check" />
+    <span data-copy-label>Copy link</span>
+  </button>
+  <p class="visually-hidden" id="copy-status" role="status" aria-live="polite" data-copy-status></p>
+</div>
+
+<style>
+  .share {
+    display: inline-flex;
+  }
+
+  .share-button {
+    display: none;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.5rem;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+    transition:
+      border-color var(--duration-fast) ease,
+      color var(--duration-fast) ease,
+      background-color var(--duration-fast) ease;
+  }
+
+  :global(.js) .share-button {
+    display: inline-flex;
+  }
+
+  .share-button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  :global(.share-button__icon--check) {
+    display: none;
+    color: var(--accent);
+  }
+
+  .share-button.is-copied {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .share-button.is-copied :global(.share-button__icon--copy) {
+    display: none;
+  }
+
+  .share-button.is-copied :global(.share-button__icon--check) {
+    display: block;
+  }
+</style>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('[data-copy-link]');
+
+  if (button) {
+    const label = button.querySelector<HTMLElement>('[data-copy-label]');
+    const status = document.querySelector<HTMLElement>('[data-copy-status]');
+    const url = button.dataset.url || window.location.href;
+    let resetTimer: number | undefined;
+
+    const setFeedback = (copied: boolean) => {
+      button.classList.toggle('is-copied', copied);
+      if (label) label.textContent = copied ? 'Link copied' : 'Copy manually';
+      if (status) {
+        status.textContent = copied
+          ? 'Article link copied to clipboard.'
+          : 'Copy the article link from the dialog.';
+      }
+
+      if (resetTimer) window.clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => {
+        button.classList.remove('is-copied');
+        if (label) label.textContent = 'Copy link';
+        if (status) status.textContent = '';
+      }, 2400);
+    };
+
+    const fallbackCopy = () => {
+      try {
+        const field = document.createElement('textarea');
+        field.value = url;
+        field.setAttribute('readonly', '');
+        field.style.position = 'fixed';
+        field.style.top = '-1000px';
+        field.style.opacity = '0';
+        document.body.appendChild(field);
+        field.select();
+        const copied = document.execCommand('copy');
+        field.remove();
+        return copied;
+      } catch {
+        return false;
+      }
+    };
+
+    button.addEventListener('click', async () => {
+      let copied = false;
+
+      try {
+        await navigator.clipboard.writeText(url);
+        copied = true;
+      } catch {
+        copied = fallbackCopy();
+      }
+
+      if (!copied) {
+        window.prompt('Copy this article link:', url);
+      }
+
+      setFeedback(copied);
+    });
+  }
+</script>

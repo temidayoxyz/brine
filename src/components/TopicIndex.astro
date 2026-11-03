@@ -1,0 +1,198 @@
+---
+import type { TopicSlug } from '../data/topics';
+import { topics } from '../data/topics';
+import { articleCountLabel } from '../lib/articles';
+import { withBase } from '../lib/paths';
+import Icon from './Icon.astro';
+
+interface Props {
+  counts: Record<TopicSlug, number>;
+}
+
+const { counts } = Astro.props;
+---
+
+<section class="topic-index" aria-labelledby="topics-title">
+  <div class="container container--wide topic-index__inner">
+    <div class="topic-index__intro" data-reveal>
+      <p class="eyebrow">Browse by topic</p>
+      <h2 class="topic-index__title" id="topics-title">Five ways in.</h2>
+      <p class="topic-index__copy">
+        Follow a thread through the journal. Each topic gathers essays that share a question, not
+        just a subject.
+      </p>
+      <a class="arrow-link topic-index__all" href={withBase('/topics/')}>
+        All topics
+        <Icon name="arrow-right" size={15} />
+      </a>
+    </div>
+
+    <ul class="topic-index__list">
+      {topics.map((topic, index) => (
+        <li data-reveal style={`--reveal-delay: ${index * 45}ms`}>
+          <a class="topic-row" href={withBase(`/topics/${topic.slug}/`)}>
+            <span class="topic-row__number" aria-hidden="true">{topic.number}</span>
+            <span class="topic-row__name">{topic.name}</span>
+            <span class="topic-row__description">{topic.shortDescription}</span>
+            <span class="topic-row__count">{articleCountLabel(counts[topic.slug])}</span>
+            <Icon name="arrow-up-right" size={16} class="topic-row__arrow" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .topic-index {
+    margin-top: var(--section-space);
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .topic-index__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    align-items: start;
+  }
+
+  .topic-index__intro {
+    max-width: 20rem;
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+  }
+
+  .topic-index__title {
+    margin-top: 0.8rem;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.6rem + 1.4vw, 2.8rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .topic-index__copy {
+    margin-top: 1rem;
+    font-size: 1.02rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .topic-index__all {
+    margin-top: 1.4rem;
+  }
+
+  .topic-index__list {
+    border-top: 1px solid var(--line);
+  }
+
+  .topic-index__list li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .topic-row {
+    display: grid;
+    grid-template-columns: 2.2rem 8.5rem minmax(0, 1fr) auto 1.25rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.15rem 0.5rem;
+    margin-inline: -0.5rem;
+    border-radius: var(--radius-xs);
+    transition: background-color var(--duration-fast) ease;
+  }
+
+  .topic-row:hover {
+    background: var(--accent-soft);
+  }
+
+  .topic-row__number {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .topic-row__name {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .topic-row__description {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+
+  .topic-row__count {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  :global(.topic-row__arrow) {
+    color: var(--muted);
+    transition:
+      transform var(--duration) var(--ease-out),
+      color var(--duration-fast) ease;
+  }
+
+  .topic-row:hover :global(.topic-row__arrow) {
+    transform: translate(2px, -2px);
+    color: var(--accent);
+  }
+
+  @media (max-width: 900px) {
+    .topic-index__inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .topic-index__intro {
+      position: static;
+      max-width: 32rem;
+    }
+
+    .topic-row {
+      grid-template-columns: 2rem 7.5rem minmax(0, 1fr) 1.25rem;
+    }
+
+    .topic-row__count {
+      display: none;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .topic-row {
+      grid-template-columns: 1.8rem minmax(0, 1fr) 1.25rem;
+      gap: 0.75rem;
+      padding-block: 1rem;
+    }
+
+    .topic-row__name {
+      font-size: 1.2rem;
+    }
+
+    .topic-row__description {
+      grid-column: 2 / 3;
+      grid-row: 2;
+      font-size: 0.88rem;
+      margin-top: -0.2rem;
+    }
+
+    :global(.topic-row__arrow) {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+    }
+  }
+</style>

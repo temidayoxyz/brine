@@ -1,0 +1,78 @@
+---
+import { withBase } from '../lib/paths';
+import WaveMark from './WaveMark.astro';
+
+interface Props {
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+}
+
+const { size = 'md', href = withBase('/') } = Astro.props;
+---
+
+<a href={href} class:list={['logo', `logo--${size}`]} aria-label="Brine — home">
+  <WaveMark class="logo__mark" />
+  <span class="logo__word">Brine<span class="logo__dot">.</span></span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.62rem;
+    color: var(--ink);
+    width: fit-content;
+  }
+
+  .logo__mark {
+    width: 1.45rem;
+    height: 1.45rem;
+    flex: none;
+    color: var(--accent);
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  .logo:hover .logo__mark {
+    transform: translateY(-2px);
+  }
+
+  .logo__word {
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+    font-weight: 560;
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  .logo__dot {
+    color: var(--accent);
+  }
+
+  .logo--sm .logo__mark {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .logo--sm .logo__word {
+    font-size: 1.35rem;
+  }
+
+  .logo--lg {
+    gap: 0.9rem;
+  }
+
+  .logo--lg .logo__mark {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .logo--lg .logo__word {
+    font-size: clamp(2.6rem, 2rem + 2.4vw, 3.9rem);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo__mark {
+      transition: none;
+    }
+  }
+</style>

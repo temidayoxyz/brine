@@ -1,0 +1,315 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - paragraph [ref=e5]:
+      - text: Issue 04
+      - generic [ref=e7]: ·
+      - text: Autumn 2026
+    - paragraph [ref=e8]: The Quiet Issue
+    - link "Read the cover story" [ref=e9] [cursor=pointer]:
+      - /url: /brine/journal/the-quiet-architecture-of-attention/
+  - banner [ref=e13]:
+    - generic [ref=e14]:
+      - link "Brine — home" [ref=e15] [cursor=pointer]:
+        - /url: /brine/
+        - generic [ref=e18]: Brine.
+      - navigation "Primary" [ref=e19]:
+        - list [ref=e20]:
+          - listitem [ref=e21]:
+            - link "Journal" [ref=e22] [cursor=pointer]:
+              - /url: /brine/journal/
+          - listitem [ref=e23]:
+            - link "Topics" [ref=e24] [cursor=pointer]:
+              - /url: /brine/topics/
+          - listitem [ref=e25]:
+            - link "Archive" [ref=e26] [cursor=pointer]:
+              - /url: /brine/archive/
+          - listitem [ref=e27]:
+            - link "About" [ref=e28] [cursor=pointer]:
+              - /url: /brine/about/
+      - generic [ref=e29]:
+        - link "Search the journal" [ref=e30] [cursor=pointer]:
+          - /url: /brine/journal/
+          - generic [ref=e34]: Search
+          - generic [aria-hidden] [ref=e35]: /
+        - button "Appearance settings" [ref=e38] [cursor=pointer]:
+          - generic [ref=e44]: System
+  - main [ref=e47]:
+    - region [ref=e48]:
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - paragraph [ref=e51]: Independent journal
+          - paragraph [ref=e53]: Issue 04 / Autumn 2026
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - heading [level=1] [ref=e56]:
+              - text: A journal for the attention you have
+              - emphasis [ref=e57]: left
+              - text: .
+            - generic [ref=e58]:
+              - paragraph [ref=e59]: Essays on attention, design, and the texture of digital life. No feed. No algorithm. Just a small, considered place to read.
+              - generic [ref=e60]:
+                - link "Read the journal" [ref=e61] [cursor=pointer]:
+                  - /url: /brine/journal/
+                - link "Our point of view" [ref=e64] [cursor=pointer]:
+                  - /url: /brine/about/
+          - complementary [ref=e65]:
+            - paragraph [ref=e70]: The current issue
+            - heading "The Quiet Issue" [level=2] [ref=e71]
+            - paragraph [ref=e72]: Eight essays on the rooms, rituals, and small decisions that shape where our attention goes — and how we might get some of it back.
+            - generic [ref=e73]:
+              - paragraph [ref=e74]:
+                - strong [ref=e75]: "8"
+                - text: stories
+              - paragraph [ref=e76]:
+                - strong [ref=e77]: "5"
+                - text: topics
+              - paragraph [ref=e78]:
+                - strong [ref=e79]: "1"
+                - text: quiet corner
+            - link "Browse the issue" [ref=e80] [cursor=pointer]:
+              - /url: "#latest"
+    - region [ref=e83]:
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - paragraph [ref=e86]: Cover story
+          - paragraph [ref=e88]: Issue 04 / The Quiet Issue
+        - generic [ref=e89]:
+          - link "Read “The Quiet Architecture of Attention”" [ref=e90] [cursor=pointer]:
+            - /url: /brine/journal/the-quiet-architecture-of-attention/
+            - img "A person in a mustard sweater typing on a laptop at a wooden desk in warm window light." [ref=e91]
+          - generic [ref=e92]:
+            - link "Attention" [ref=e93] [cursor=pointer]:
+              - /url: /brine/topics/attention/
+            - heading [level=2] [ref=e94]:
+              - link "The Quiet Architecture of Attention" [ref=e95] [cursor=pointer]:
+                - /url: /brine/journal/the-quiet-architecture-of-attention/
+            - paragraph [ref=e96]: Focus is not a productivity setting. It is a room we build, one small decision at a time.
+            - generic [ref=e98]:
+              - time [ref=e99]: 21 Oct 2026
+              - generic [ref=e101]: 7 min read
+              - generic [ref=e103]: Brine Editorial
+            - link "Read the story" [ref=e104] [cursor=pointer]:
+              - /url: /brine/journal/the-quiet-architecture-of-attention/
+    - region [ref=e107]:
+      - generic [ref=e108]:
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - paragraph [ref=e111]: From the journal
+            - heading "Latest stories" [level=2] [ref=e112]
+          - link "All 8 stories" [ref=e113] [cursor=pointer]:
+            - /url: /brine/journal/
+        - generic [ref=e116]:
+          - article [ref=e118]:
+            - link "Read “What We Lost When the Feed Learned to Guess”" [ref=e119] [cursor=pointer]:
+              - /url: /brine/journal/what-we-lost-when-the-feed-learned-to-guess/
+              - img "A close-up of hands holding a smartphone, a silver watch on one wrist, against a blurred street." [ref=e120]
+            - generic [ref=e121]:
+              - generic [ref=e122]:
+                - generic [aria-hidden] [ref=e123]: "02"
+                - link "Digital Life" [ref=e124] [cursor=pointer]:
+                  - /url: /brine/topics/digital-life/
+                - generic [aria-hidden] [ref=e125]: /
+                - generic [ref=e126]: 7 min read
+              - heading [level=3] [ref=e127]:
+                - link "What We Lost When the Feed Learned to Guess" [ref=e128] [cursor=pointer]:
+                  - /url: /brine/journal/what-we-lost-when-the-feed-learned-to-guess/
+              - paragraph [ref=e129]: The algorithm gave us more of what we like. It also took away the pleasure of finding something we did not know we were looking for.
+              - generic [ref=e130]:
+                - time [ref=e131]: 14 Oct 2026
+                - generic [ref=e133]: Brine Editorial
+          - article [ref=e135]:
+            - link "Read “The Case for a Slower Palette”" [ref=e136] [cursor=pointer]:
+              - /url: /brine/journal/the-case-for-a-slower-palette/
+              - img "An overhead view of a designer's desk with colour swatch books, a tablet of palette sketches, and a plant." [ref=e137]
+            - generic [ref=e138]:
+              - generic [ref=e139]:
+                - generic [aria-hidden] [ref=e140]: "03"
+                - link "Design" [ref=e141] [cursor=pointer]:
+                  - /url: /brine/topics/design/
+                - generic [aria-hidden] [ref=e142]: /
+                - generic [ref=e143]: 6 min read
+              - heading [level=3] [ref=e144]:
+                - link "The Case for a Slower Palette" [ref=e145] [cursor=pointer]:
+                  - /url: /brine/journal/the-case-for-a-slower-palette/
+              - paragraph [ref=e146]: Colour trends move faster than ever. A palette chosen slowly — for light, memory, and the life you actually live — may be the more radical choice.
+              - generic [ref=e147]:
+                - time [ref=e148]: 7 Oct 2026
+                - generic [ref=e150]: Brine Editorial
+          - article [ref=e152]:
+            - link "Read “A Field Guide to Doing One Thing at a Time”" [ref=e153] [cursor=pointer]:
+              - /url: /brine/journal/a-field-guide-to-doing-one-thing-at-a-time/
+              - img "A hand in a grey knit sleeve writing with a blue pen on paper beside a white mug and notebook." [ref=e154]
+            - generic [ref=e155]:
+              - generic [ref=e156]:
+                - generic [aria-hidden] [ref=e157]: "04"
+                - link "Attention" [ref=e158] [cursor=pointer]:
+                  - /url: /brine/topics/attention/
+                - generic [aria-hidden] [ref=e159]: /
+                - generic [ref=e160]: 6 min read
+              - heading [level=3] [ref=e161]:
+                - link "A Field Guide to Doing One Thing at a Time" [ref=e162] [cursor=pointer]:
+                  - /url: /brine/journal/a-field-guide-to-doing-one-thing-at-a-time/
+              - paragraph [ref=e163]: Monotasking is not a productivity trick. It is a way of being where you are — and it takes more practice than it sounds.
+              - generic [ref=e164]:
+                - time [ref=e165]: 30 Sept 2026
+                - generic [ref=e167]: Brine Editorial
+        - generic [ref=e168]:
+          - generic [ref=e169]:
+            - paragraph [ref=e170]: Also in Issue 04
+            - paragraph [ref=e171]: 4 stories
+          - list [ref=e172]:
+            - listitem [ref=e173]:
+              - link "Culture The Internet's New Nostalgia for Places It Has Never Been 23 Sept 2026" [ref=e174] [cursor=pointer]:
+                - /url: /brine/journal/the-internets-new-nostalgia-for-places-it-has-never-been/
+                - generic [aria-hidden] [ref=e175]: "05"
+                - generic [ref=e176]:
+                  - generic [ref=e177]: Culture
+                  - generic [ref=e178]: The Internet's New Nostalgia for Places It Has Never Been
+                - generic [ref=e179]: 23 Sept 2026
+            - listitem [ref=e183]:
+              - link "Living Notes on Keeping a Commonplace Book 16 Sept 2026" [ref=e184] [cursor=pointer]:
+                - /url: /brine/journal/notes-on-keeping-a-commonplace-book/
+                - generic [aria-hidden] [ref=e185]: "06"
+                - generic [ref=e186]:
+                  - generic [ref=e187]: Living
+                  - generic [ref=e188]: Notes on Keeping a Commonplace Book
+                - generic [ref=e189]: 16 Sept 2026
+            - listitem [ref=e193]:
+              - link "Living The Tyranny of the Weekly Reset 9 Sept 2026" [ref=e194] [cursor=pointer]:
+                - /url: /brine/journal/the-tyranny-of-the-weekly-reset/
+                - generic [aria-hidden] [ref=e195]: "07"
+                - generic [ref=e196]:
+                  - generic [ref=e197]: Living
+                  - generic [ref=e198]: The Tyranny of the Weekly Reset
+                - generic [ref=e199]: 9 Sept 2026
+            - listitem [ref=e203]:
+              - link "Design A Brief History of the Handmade Web 2 Sept 2026" [ref=e204] [cursor=pointer]:
+                - /url: /brine/journal/a-brief-history-of-the-handmade-web/
+                - generic [aria-hidden] [ref=e205]: "08"
+                - generic [ref=e206]:
+                  - generic [ref=e207]: Design
+                  - generic [ref=e208]: A Brief History of the Handmade Web
+                - generic [ref=e209]: 2 Sept 2026
+    - region [ref=e213]:
+      - generic [ref=e214]:
+        - generic [ref=e215]:
+          - paragraph [ref=e216]: Browse by topic
+          - heading "Five ways in." [level=2] [ref=e217]
+          - paragraph [ref=e218]: Follow a thread through the journal. Each topic gathers essays that share a question, not just a subject.
+          - link "All topics" [ref=e219] [cursor=pointer]:
+            - /url: /brine/topics/
+        - list [ref=e222]:
+          - listitem [ref=e223]:
+            - link "Attention Focus, distraction, and the art of noticing. 2 stories" [ref=e224] [cursor=pointer]:
+              - /url: /brine/topics/attention/
+              - generic [aria-hidden] [ref=e225]: "01"
+              - generic [ref=e226]: Attention
+              - generic [ref=e227]: Focus, distraction, and the art of noticing.
+              - generic [ref=e228]: 2 stories
+          - listitem [ref=e232]:
+            - link "Design Interfaces, objects, and the choices behind them. 2 stories" [ref=e233] [cursor=pointer]:
+              - /url: /brine/topics/design/
+              - generic [aria-hidden] [ref=e234]: "02"
+              - generic [ref=e235]: Design
+              - generic [ref=e236]: Interfaces, objects, and the choices behind them.
+              - generic [ref=e237]: 2 stories
+          - listitem [ref=e241]:
+            - link "Digital Life How the internet shapes the way we live and remember. 1 story" [ref=e242] [cursor=pointer]:
+              - /url: /brine/topics/digital-life/
+              - generic [aria-hidden] [ref=e243]: "03"
+              - generic [ref=e244]: Digital Life
+              - generic [ref=e245]: How the internet shapes the way we live and remember.
+              - generic [ref=e246]: 1 story
+          - listitem [ref=e250]:
+            - link "Culture Art, media, and the stories we tell about ourselves. 1 story" [ref=e251] [cursor=pointer]:
+              - /url: /brine/topics/culture/
+              - generic [aria-hidden] [ref=e252]: "04"
+              - generic [ref=e253]: Culture
+              - generic [ref=e254]: Art, media, and the stories we tell about ourselves.
+              - generic [ref=e255]: 1 story
+          - listitem [ref=e259]:
+            - link "Living Habits, rituals, and a considered everyday. 2 stories" [ref=e260] [cursor=pointer]:
+              - /url: /brine/topics/living/
+              - generic [aria-hidden] [ref=e261]: "05"
+              - generic [ref=e262]: Living
+              - generic [ref=e263]: Habits, rituals, and a considered everyday.
+              - generic [ref=e264]: 2 stories
+    - region [ref=e268]:
+      - generic [ref=e272]:
+        - generic [ref=e273]:
+          - paragraph [ref=e274]: A note from the editors
+          - paragraph [ref=e275]: Brine · Issue 04
+        - generic [ref=e276]:
+          - heading "We are not trying to win your attention. We are trying to give it back." [level=2] [ref=e277]
+          - paragraph [ref=e278]: Brine is an independent journal for people who would rather think than scroll. We publish essays about attention, design, and the texture of digital life — slowly, and with care. No infinite feed. No algorithm deciding what you read next. Just a small, considered place to spend a little time.
+          - link "Read our point of view" [ref=e279] [cursor=pointer]:
+            - /url: /brine/about/
+  - contentinfo [ref=e282]:
+    - generic [ref=e283]:
+      - generic [ref=e284]:
+        - generic [ref=e285]:
+          - link "Brine — home" [ref=e286] [cursor=pointer]:
+            - /url: /brine/
+            - generic [ref=e289]: Brine.
+          - paragraph [ref=e290]: A journal of attention, design & the texture of digital life.
+          - paragraph [ref=e291]: Issue 04 · Autumn 2026
+        - generic [ref=e292]:
+          - generic [ref=e293]:
+            - paragraph [ref=e294]: Explore
+            - list [ref=e295]:
+              - listitem [ref=e296]:
+                - link "Journal" [ref=e297] [cursor=pointer]:
+                  - /url: /brine/journal/
+              - listitem [ref=e298]:
+                - link "Topics" [ref=e299] [cursor=pointer]:
+                  - /url: /brine/topics/
+              - listitem [ref=e300]:
+                - link "Archive" [ref=e301] [cursor=pointer]:
+                  - /url: /brine/archive/
+              - listitem [ref=e302]:
+                - link "About" [ref=e303] [cursor=pointer]:
+                  - /url: /brine/about/
+          - generic [ref=e304]:
+            - paragraph [ref=e305]: Topics
+            - list [ref=e306]:
+              - listitem [ref=e307]:
+                - link "Attention" [ref=e308] [cursor=pointer]:
+                  - /url: /brine/topics/attention/
+              - listitem [ref=e309]:
+                - link "Design" [ref=e310] [cursor=pointer]:
+                  - /url: /brine/topics/design/
+              - listitem [ref=e311]:
+                - link "Digital Life" [ref=e312] [cursor=pointer]:
+                  - /url: /brine/topics/digital-life/
+              - listitem [ref=e313]:
+                - link "Culture" [ref=e314] [cursor=pointer]:
+                  - /url: /brine/topics/culture/
+              - listitem [ref=e315]:
+                - link "Living" [ref=e316] [cursor=pointer]:
+                  - /url: /brine/topics/living/
+          - generic [ref=e317]:
+            - paragraph [ref=e318]: Elsewhere
+            - list [ref=e319]:
+              - listitem [ref=e320]:
+                - link "RSS feed" [ref=e321] [cursor=pointer]:
+                  - /url: /brine/rss.xml
+              - listitem [ref=e326]:
+                - link "Search" [ref=e327] [cursor=pointer]:
+                  - /url: /brine/journal/
+              - listitem [ref=e331]:
+                - link "Back to top" [ref=e332] [cursor=pointer]:
+                  - /url: "#top"
+      - generic [ref=e335]:
+        - paragraph [ref=e336]: © 2026 Brine. All rights reserved.
+        - paragraph [ref=e337]: Set in type, built with Astro, and served from GitHub Pages.
+        - paragraph [ref=e338]:
+          - text: Photography via
+          - link "Unsplash" [ref=e339] [cursor=pointer]:
+            - /url: https://unsplash.com
+          - text: and
+          - link "Pexels" [ref=e340] [cursor=pointer]:
+            - /url: https://www.pexels.com
+          - text: .
+      - generic [aria-hidden] [ref=e341]: Brine.

@@ -1,0 +1,688 @@
+---
+import { Image } from 'astro:assets';
+import aboutSea from '../assets/editorial/about-sea.jpg';
+import wave from '../assets/editorial/wave.jpg';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import PageMasthead from '../components/PageMasthead.astro';
+import WaveMark from '../components/WaveMark.astro';
+import { site } from '../data/site';
+import { topics } from '../data/topics';
+import { absoluteUrl, withBase } from '../lib/paths';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About Brine',
+    url: absoluteUrl('/about/'),
+    description: site.description,
+    inLanguage: 'en-GB',
+    mainEntity: {
+      '@type': 'Organization',
+      name: 'Brine',
+      url: absoluteUrl('/'),
+      description: site.description,
+      logo: {
+        '@type': 'ImageObject',
+        url: absoluteUrl('/icon-512.png'),
+      },
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Brine',
+    url: absoluteUrl('/'),
+    description: site.description,
+    foundingDate: '2026',
+    knowsAbout: topics.map((topic) => topic.name),
+  },
+];
+
+const principles = [
+  {
+    number: '01',
+    title: 'Attention is worth protecting.',
+    copy: 'We publish for the kind of reading that asks for a little time. No infinite feed, no autoplay, no urgency that has been manufactured to keep you here.',
+  },
+  {
+    number: '02',
+    title: 'Design is an argument.',
+    copy: 'How something looks and feels is part of what it says. We care about type, colour, pace, and the quiet decisions that make a page feel habitable.',
+  },
+  {
+    number: '03',
+    title: 'The internet is a place.',
+    copy: 'Digital life is not a separate world. It is where we work, love, remember, and get distracted. We write about it as a part of ordinary life, not an escape from it.',
+  },
+  {
+    number: '04',
+    title: 'Slow is not the same as nostalgic.',
+    copy: 'We are not trying to return to an earlier web. We are trying to make something considered with the tools we have now — and to be honest about what those tools cost.',
+  },
+  {
+    number: '05',
+    title: 'A small journal can be a real one.',
+    copy: 'Brine is edited under a collective byline. It has no advertising, no sponsored posts, and no growth targets. It exists because the essays are worth making.',
+  },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="Brine is an independent journal about attention, design, and the texture of digital life. Read our point of view, our principles, and our colophon."
+  image="/og/brine-og.png"
+  imageAlt="Brine — a journal of attention, design and digital life"
+  jsonLd={jsonLd}
+>
+  <PageMasthead
+    eyebrow="About Brine"
+    title="A quiet corner of the internet."
+    intro="Brine is an independent journal about attention, design, and the texture of digital life. We publish essays for people who would rather think than scroll."
+    meta={`Issue ${site.issue.number} · ${site.issue.season}`}
+  />
+
+  <figure class="about-image">
+    <div class="container container--wide">
+      <div class="about-image__frame" data-reveal>
+        <Image
+          class="about-image__image"
+          src={aboutSea}
+          alt="A wide expanse of blue sea under a pale, hazy sky."
+          widths={[720, 1080, 1440, 1800]}
+          sizes="100vw"
+          quality={84}
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+      <figcaption>
+        <span>The sea is a good place to remember the size of things.</span>
+        <span>Photograph via Unsplash</span>
+      </figcaption>
+    </div>
+  </figure>
+
+  <section class="about-intro" aria-labelledby="about-intro-title">
+    <div class="container container--wide about-intro__grid">
+      <div class="about-intro__copy prose">
+        <h2 id="about-intro-title">Why we publish</h2>
+        <p>
+          The internet is very good at giving us more. More news, more opinions, more images, more
+          ways to compare our lives to lives that have been edited for display. What it is less good
+          at is giving us a place to stop.
+        </p>
+        <p>
+          Brine is an attempt to make that place. It is a journal, not a platform: a small, finite
+          collection of essays that you can read in an afternoon and return to over time. There is
+          no algorithm deciding what you see next. There is no comment section asking you to perform
+          a reaction. There is only the writing, the images, and the links we chose to include.
+        </p>
+        <p>
+          We are interested in attention, design, digital life, culture, and the ordinary practices
+          that make a day feel like it belongs to you. These are not separate subjects. The way a
+          room is arranged, the way a feed is ranked, the way a colour makes you feel, the way you
+          spend a Sunday — these are all part of the same question: how do we live with our
+          attention, rather than against it?
+        </p>
+        <p>
+          We do not have a grand theory of how to fix the internet. We have a few convictions, a
+          lot of questions, and a belief that small, considered things are worth making.
+        </p>
+      </div>
+
+      <aside class="about-facts" aria-labelledby="about-facts-title">
+        <div class="about-facts__head">
+          <WaveMark class="about-facts__mark" />
+          <p class="eyebrow" id="about-facts-title">Brine at a glance</p>
+        </div>
+        <dl>
+          <div>
+            <dt>Founded</dt>
+            <dd>2026</dd>
+          </div>
+          <div>
+            <dt>Issue</dt>
+            <dd>{site.issue.number} — {site.issue.name}</dd>
+          </div>
+          <div>
+            <dt>Topics</dt>
+            <dd>{topics.map((topic) => topic.name).join(', ')}</dd>
+          </div>
+          <div>
+            <dt>Byline</dt>
+            <dd>Brine Editorial</dd>
+          </div>
+          <div>
+            <dt>Funding</dt>
+            <dd>Independent. No ads, no sponsors.</dd>
+          </div>
+        </dl>
+        <a class="text-link" href={withBase('/journal/')}>
+          Read the journal
+          <Icon name="arrow-right" size={15} />
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="principles" aria-labelledby="principles-title">
+    <div class="container container--wide">
+      <div class="principles__head" data-reveal>
+        <p class="eyebrow">What we believe</p>
+        <h2 class="principles__title" id="principles-title">Five working principles.</h2>
+      </div>
+
+      <ol class="principles__list">
+        {principles.map((principle, index) => (
+          <li data-reveal style={`--reveal-delay: ${index * 45}ms`}>
+            <span class="principles__number" aria-hidden="true">{principle.number}</span>
+            <h3 class="principles__item-title">{principle.title}</h3>
+            <p class="principles__copy">{principle.copy}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="making" aria-labelledby="making-title">
+    <div class="container container--wide making__grid">
+      <div class="making__body">
+        <p class="eyebrow">How it is made</p>
+        <h2 class="making__title" id="making-title">Static by default. Considered by hand.</h2>
+        <p class="making__copy">
+          Brine is built with Astro and served as static files from GitHub Pages. There is no
+          database, no user account, and no third-party analytics. The search index is a single
+          file; the theme is remembered in your browser; the pages are designed to work without
+          JavaScript, with a little enhancement where it helps.
+        </p>
+        <p class="making__copy">
+          The journal uses a house byline rather than invented biographies. “Brine Editorial” is the
+          collective name for the writing and editing of the journal. The photography is sourced from
+          Unsplash and Pexels and credited where it appears.
+        </p>
+
+        <div class="making__quote">
+          <WaveMark class="making__quote-mark" />
+          <p>
+            We are not trying to win your attention. We are trying to give it back.
+          </p>
+        </div>
+
+        <a class="btn" href={withBase('/rss.xml')}>
+          Follow by RSS
+          <Icon name="rss" size={16} />
+        </a>
+      </div>
+
+      <aside class="colophon" aria-labelledby="colophon-title">
+        <div class="colophon__head">
+          <p class="eyebrow" id="colophon-title">Colophon</p>
+          <span class="colophon__edition">No. {site.issue.number}</span>
+        </div>
+        <dl>
+          <div>
+            <dt>Typefaces</dt>
+            <dd>{site.colophon.typefaces}</dd>
+          </div>
+          <div>
+            <dt>Platform</dt>
+            <dd>{site.colophon.platform}</dd>
+          </div>
+          <div>
+            <dt>Photography</dt>
+            <dd>{site.colophon.photography}</dd>
+          </div>
+          <div>
+            <dt>Colours</dt>
+            <dd>Warm ivory, deep green ink, sea glass.</dd>
+          </div>
+        </dl>
+        <figure class="colophon__figure">
+          <Image
+            class="colophon__image"
+            src={wave}
+            alt="A close view of a dark blue wave rising under a pale sky."
+            widths={[320, 480, 640]}
+            sizes="(max-width: 900px) 100vw, 28vw"
+            quality={82}
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>Water, in its own typeface.</figcaption>
+        </figure>
+      </aside>
+    </div>
+  </section>
+
+  <section class="about-cta" aria-labelledby="about-cta-title">
+    <div class="container container--wide about-cta__inner">
+      <div>
+        <p class="eyebrow eyebrow--accent">Start reading</p>
+        <h2 class="about-cta__title" id="about-cta-title">
+          The journal is small on purpose. Begin anywhere.
+        </h2>
+      </div>
+      <div class="about-cta__actions">
+        <a class="btn" href={withBase('/journal/')}>
+          All stories
+          <Icon name="arrow-right" size={16} />
+        </a>
+        <a class="text-link" href={withBase('/topics/')}>Browse by topic</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-image {
+    margin: clamp(2.5rem, 5vw, 4.5rem) 0 0;
+  }
+
+  .about-image__frame {
+    overflow: hidden;
+    border-radius: var(--radius-xs);
+    background: var(--surface-2);
+    aspect-ratio: 21 / 9;
+  }
+
+  .about-image__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .about-image figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 0.7rem;
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .about-intro {
+    padding-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  .about-intro__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.55fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    align-items: start;
+  }
+
+  .about-intro__copy {
+    max-width: none;
+  }
+
+  .about-intro__copy p {
+    max-width: 42rem;
+  }
+
+  .about-intro__copy h2 {
+    margin-top: 0;
+  }
+
+  .about-facts {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+    padding: 1.3rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+    background: var(--surface);
+  }
+
+  .about-facts__head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .about-facts__mark {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--accent);
+  }
+
+  .about-facts dl {
+    margin-top: 1rem;
+  }
+
+  .about-facts dl div {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 0.65rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .about-facts dt,
+  .colophon dt {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .about-facts dd,
+  .colophon dd {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .about-facts .text-link {
+    margin-top: 1rem;
+  }
+
+  .principles {
+    margin-top: var(--section-space);
+    padding-block: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .principles__head {
+    max-width: 34rem;
+  }
+
+  .principles__title {
+    margin-top: 0.7rem;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.6rem + 1.5vw, 2.9rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .principles__list {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    border-top: 1px solid var(--line);
+  }
+
+  .principles__list li {
+    padding: 1.3rem 1.1rem 0.4rem;
+    border-right: 1px solid var(--line);
+  }
+
+  .principles__list li:first-child {
+    padding-left: 0;
+  }
+
+  .principles__list li:last-child {
+    border-right: 0;
+    padding-right: 0;
+  }
+
+  .principles__number {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+  }
+
+  .principles__item-title {
+    margin-top: 0.8rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+  }
+
+  .principles__copy {
+    margin-top: 0.6rem;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .making {
+    padding-top: var(--section-space);
+  }
+
+  .making__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.6fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    align-items: start;
+  }
+
+  .making__body {
+    max-width: 44rem;
+  }
+
+  .making__title {
+    margin-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 1.7rem + 2vw, 3.4rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .making__copy {
+    max-width: 40rem;
+    margin-top: 1.1rem;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+
+  .making__quote {
+    position: relative;
+    margin: clamp(2rem, 4vw, 3rem) 0;
+    padding: 1.6rem 0 1.6rem 1.8rem;
+    border-left: 2px solid var(--accent);
+  }
+
+  .making__quote p {
+    max-width: 30rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
+    font-weight: 450;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+
+  .making__quote-mark {
+    position: absolute;
+    right: 0;
+    bottom: -1rem;
+    width: 5rem;
+    height: 5rem;
+    color: var(--accent);
+    opacity: 0.12;
+  }
+
+  .colophon {
+    padding: 1.4rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xs);
+    background: var(--surface);
+  }
+
+  .colophon__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .colophon__edition {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .colophon dl div {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .colophon__figure {
+    margin: 1rem 0 0;
+  }
+
+  .colophon__image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-xs);
+  }
+
+  .colophon__figure figcaption {
+    margin-top: 0.5rem;
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    color: var(--muted);
+  }
+
+  .about-cta {
+    margin-top: var(--section-space);
+    padding-block: clamp(3rem, 6vw, 5rem);
+    background: var(--band-bg);
+    color: var(--band-ink);
+  }
+
+  .about-cta__inner {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .about-cta__title {
+    max-width: 24ch;
+    margin-top: 0.8rem;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.5rem + 2vw, 3.2rem);
+    font-weight: 450;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--band-ink);
+  }
+
+  .about-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.1rem;
+  }
+
+  .about-cta .btn {
+    background: var(--band-ink);
+    color: var(--band-bg);
+  }
+
+  .about-cta .btn:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .about-cta .text-link {
+    color: var(--band-ink);
+    border-color: var(--band-muted);
+  }
+
+  .about-cta .text-link:hover {
+    color: var(--band-muted);
+    border-color: var(--band-muted);
+  }
+
+  @media (max-width: 1000px) {
+    .principles__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .principles__list li {
+      padding: 1.2rem 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .principles__list li:nth-child(2n) {
+      border-right: 0;
+    }
+
+    .principles__list li:first-child {
+      padding-left: 1rem;
+    }
+
+    .principles__list li:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .about-intro__grid,
+    .making__grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .about-facts {
+      position: static;
+      max-width: 30rem;
+    }
+
+    .making__body {
+      max-width: none;
+    }
+
+    .about-cta__inner {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .about-image__frame {
+      aspect-ratio: 4 / 3;
+    }
+
+    .about-image figcaption {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .principles__list {
+      grid-template-columns: 1fr;
+    }
+
+    .principles__list li,
+    .principles__list li:first-child {
+      padding: 1.1rem 0;
+      border-right: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .about-facts dl div,
+    .colophon dl div {
+      grid-template-columns: 5rem minmax(0, 1fr);
+    }
+  }
+</style>

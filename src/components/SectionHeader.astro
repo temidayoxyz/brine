@@ -1,0 +1,90 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  href?: string;
+  linkLabel?: string;
+  id?: string;
+}
+
+const { eyebrow, title, href, linkLabel = 'View all', id } = Astro.props;
+---
+
+<div class="section-head" data-reveal>
+  <div class="section-head__title-wrap">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h2 class="section-head__title" id={id}>{title}</h2>
+  </div>
+
+  {href && (
+    <a class="section-head__link" href={href}>
+      {linkLabel}
+      <Icon name="arrow-right" size={15} />
+    </a>
+  )}
+</div>
+
+<style>
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--line);
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+  }
+
+  .section-head__title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .section-head__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 1.6rem + 1.3vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.028em;
+  }
+
+  .section-head__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--line-strong);
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--ink-2);
+    transition:
+      color var(--duration-fast) ease,
+      border-color var(--duration-fast) ease;
+  }
+
+  .section-head__link svg {
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .section-head__link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .section-head__link:hover svg {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 520px) {
+    .section-head {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+  }
+</style>

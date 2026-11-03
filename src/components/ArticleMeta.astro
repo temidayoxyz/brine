@@ -1,0 +1,62 @@
+---
+import type { Article } from '../lib/articles';
+import {
+  estimateReadingTime,
+  formatDate,
+  formatReadingTime,
+  getArticleTopic,
+  topicUrl,
+} from '../lib/articles';
+
+interface Props {
+  article: Article;
+  variant?: 'card' | 'article' | 'row';
+  showCategory?: boolean;
+  showAuthor?: boolean;
+}
+
+const { article, variant = 'card', showCategory = true, showAuthor = false } = Astro.props;
+const topic = getArticleTopic(article);
+const minutes = estimateReadingTime(article.body);
+---
+
+<div class:list={['meta', `meta--${variant}`]}>
+  {showCategory && (
+    <a class="meta__category" href={topicUrl(topic.slug)}>{topic.name}</a>
+  )}
+  <time datetime={article.data.publishedAt.toISOString()}>
+    {formatDate(article.data.publishedAt, 'short')}
+  </time>
+  <span class="meta__dot" aria-hidden="true"></span>
+  <span>{formatReadingTime(minutes)}</span>
+  {showAuthor && (
+    <>
+      <span class="meta__dot" aria-hidden="true"></span>
+      <span>{article.data.author}</span>
+    </>
+  )}
+</div>
+
+<style>
+  .meta__category {
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .meta__category:hover {
+    color: var(--accent-strong);
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
+  }
+
+  .meta--article {
+    font-size: 0.75rem;
+  }
+
+  .meta--article .meta__category {
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,360 @@
+---
+import Icon from './Icon.astro';
+---
+
+<div class="theme-control" data-theme-control>
+  <button
+    class="theme-trigger"
+    type="button"
+    data-theme-trigger
+    aria-haspopup="true"
+    aria-expanded="false"
+    aria-controls="theme-menu"
+    aria-label="Appearance settings"
+  >
+    <span class="theme-trigger__icon" aria-hidden="true">
+      <Icon name="sun" size={17} class="theme-icon theme-icon--light" />
+      <Icon name="moon" size={17} class="theme-icon theme-icon--dark" />
+      <Icon name="monitor" size={17} class="theme-icon theme-icon--system" />
+    </span>
+    <span class="theme-trigger__label" aria-hidden="true">
+      <span class="theme-mode theme-mode--light">Light</span>
+      <span class="theme-mode theme-mode--dark">Dark</span>
+      <span class="theme-mode theme-mode--system">System</span>
+    </span>
+    <Icon name="chevron-down" size={13} class="theme-trigger__chevron" />
+  </button>
+
+  <div class="theme-menu" id="theme-menu" data-theme-menu role="menu" aria-label="Appearance" hidden>
+    <p class="theme-menu__title">Appearance</p>
+
+    <button
+      type="button"
+      role="menuitemradio"
+      aria-checked="true"
+      data-theme-value="system"
+      class="theme-option"
+    >
+      <Icon name="monitor" size={17} class="theme-option__icon" />
+      <span class="theme-option__copy">
+        <span class="theme-option__name">System</span>
+        <span class="theme-option__hint">Follow your device</span>
+      </span>
+      <Icon name="check" size={15} class="theme-option__check" />
+    </button>
+
+    <button
+      type="button"
+      role="menuitemradio"
+      aria-checked="false"
+      data-theme-value="light"
+      class="theme-option"
+    >
+      <Icon name="sun" size={17} class="theme-option__icon" />
+      <span class="theme-option__copy">
+        <span class="theme-option__name">Light</span>
+        <span class="theme-option__hint">Warm ivory paper</span>
+      </span>
+      <Icon name="check" size={15} class="theme-option__check" />
+    </button>
+
+    <button
+      type="button"
+      role="menuitemradio"
+      aria-checked="false"
+      data-theme-value="dark"
+      class="theme-option"
+    >
+      <Icon name="moon" size={17} class="theme-option__icon" />
+      <span class="theme-option__copy">
+        <span class="theme-option__name">Dark</span>
+        <span class="theme-option__hint">Low light, low glare</span>
+      </span>
+      <Icon name="check" size={15} class="theme-option__check" />
+    </button>
+  </div>
+</div>
+
+<style>
+  .theme-control {
+    display: none;
+    position: relative;
+  }
+
+  :global(.js) .theme-control {
+    display: block;
+  }
+
+  .theme-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--radius-xs);
+    color: var(--ink-2);
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .theme-trigger:hover {
+    color: var(--ink);
+  }
+
+  .theme-trigger__icon {
+    display: grid;
+    place-items: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    color: var(--ink-2);
+  }
+
+  :global(.theme-icon),
+  .theme-mode {
+    display: none;
+  }
+
+  :global([data-theme-preference='light'] .theme-icon--light),
+  :global([data-theme-preference='dark'] .theme-icon--dark),
+  :global([data-theme-preference='system'] .theme-icon--system),
+  :global([data-theme-preference='light']) .theme-mode--light,
+  :global([data-theme-preference='dark']) .theme-mode--dark,
+  :global([data-theme-preference='system']) .theme-mode--system {
+    display: inline-block;
+  }
+
+  .theme-trigger__label {
+    min-width: 3.1rem;
+    text-align: left;
+  }
+
+  :global(.theme-trigger__chevron) {
+    color: var(--muted);
+    transition: transform var(--duration-fast) ease;
+  }
+
+  :global(.theme-trigger[aria-expanded='true'] .theme-trigger__chevron) {
+    transform: rotate(180deg);
+  }
+
+  .theme-menu {
+    position: absolute;
+    top: calc(100% + 0.55rem);
+    right: 0;
+    z-index: 80;
+    width: 15.25rem;
+    max-width: calc(100vw - 2rem);
+    padding: 0.4rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    box-shadow: var(--shadow-dialog);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .theme-menu:not([hidden]) {
+      animation: menu-in 180ms var(--ease-out) both;
+    }
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .theme-menu__title {
+    padding: 0.45rem 0.6rem 0.4rem;
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .theme-option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: var(--radius-xs);
+    text-align: left;
+    color: var(--ink-2);
+    transition:
+      background-color var(--duration-fast) ease,
+      color var(--duration-fast) ease;
+  }
+
+  .theme-option:hover,
+  .theme-option:focus-visible {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  :global(.theme-option__icon) {
+    flex: none;
+    color: var(--muted);
+  }
+
+  :global(.theme-option[aria-checked='true'] .theme-option__icon) {
+    color: var(--accent);
+  }
+
+  .theme-option__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.08rem;
+    flex: 1;
+  }
+
+  .theme-option__name {
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    font-weight: 550;
+    line-height: 1.3;
+  }
+
+  .theme-option__hint {
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+
+  :global(.theme-option__check) {
+    flex: none;
+    color: var(--accent);
+    opacity: 0;
+  }
+
+  :global(.theme-option[aria-checked='true'] .theme-option__check) {
+    opacity: 1;
+  }
+
+  @media (max-width: 1080px) {
+    .theme-trigger__label,
+    :global(.theme-trigger__chevron) {
+      display: none;
+    }
+
+    .theme-trigger {
+      justify-content: center;
+      width: 2.75rem;
+      padding: 0.35rem;
+    }
+  }
+</style>
+
+<script>
+  const control = document.querySelector<HTMLElement>('[data-theme-control]');
+
+  if (control) {
+    const root = document.documentElement;
+    const trigger = control.querySelector<HTMLButtonElement>('[data-theme-trigger]');
+    const menu = control.querySelector<HTMLElement>('[data-theme-menu]');
+    const options = Array.from(
+      control.querySelectorAll<HTMLButtonElement>('[data-theme-value]'),
+    );
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const isPreference = (value: string | undefined): value is 'light' | 'dark' | 'system' =>
+      value === 'light' || value === 'dark' || value === 'system';
+
+    const getPreference = () =>
+      isPreference(root.dataset.themePreference) ? root.dataset.themePreference : 'system';
+
+    const syncCheckedState = (preference: string) => {
+      for (const option of options) {
+        option.setAttribute('aria-checked', String(option.dataset.themeValue === preference));
+      }
+    };
+
+    const applyPreference = (preference: 'light' | 'dark' | 'system', persist = true) => {
+      const resolved = preference === 'system' ? (media.matches ? 'dark' : 'light') : preference;
+      root.dataset.theme = resolved;
+      root.dataset.themePreference = preference;
+      root.style.colorScheme = resolved;
+      syncCheckedState(preference);
+
+      if (persist) {
+        try {
+          localStorage.setItem('brine-theme', preference);
+        } catch {
+          /* Storage can be unavailable in private or restricted contexts. */
+        }
+      }
+    };
+
+    const closeMenu = (restoreFocus = false) => {
+      if (!menu || menu.hidden) return;
+      menu.hidden = true;
+      trigger?.setAttribute('aria-expanded', 'false');
+      if (restoreFocus) trigger?.focus();
+    };
+
+    const openMenu = () => {
+      if (!menu) return;
+      menu.hidden = false;
+      trigger?.setAttribute('aria-expanded', 'true');
+      const selected =
+        options.find((option) => option.getAttribute('aria-checked') === 'true') ?? options[0];
+      selected?.focus();
+    };
+
+    syncCheckedState(getPreference());
+
+    trigger?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      if (menu?.hidden) openMenu();
+      else closeMenu(true);
+    });
+
+    for (const option of options) {
+      option.addEventListener('click', () => {
+        const preference = option.dataset.themeValue;
+        if (isPreference(preference)) {
+          applyPreference(preference);
+          closeMenu(true);
+        }
+      });
+    }
+
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Node && !control.contains(event.target)) closeMenu();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu && !menu.hidden) {
+        event.preventDefault();
+        closeMenu(true);
+      }
+    });
+
+    menu?.addEventListener('keydown', (event) => {
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const currentIndex = options.indexOf(document.activeElement as HTMLButtonElement);
+      let nextIndex = currentIndex;
+
+      if (event.key === 'ArrowDown') nextIndex = (currentIndex + 1) % options.length;
+      if (event.key === 'ArrowUp') nextIndex = (currentIndex - 1 + options.length) % options.length;
+      if (event.key === 'Home') nextIndex = 0;
+      if (event.key === 'End') nextIndex = options.length - 1;
+
+      options[nextIndex]?.focus();
+    });
+
+    media.addEventListener('change', () => {
+      if (getPreference() === 'system') applyPreference('system', false);
+    });
+  }
+</script>

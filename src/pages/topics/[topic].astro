@@ -1,0 +1,452 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import Icon from '../../components/Icon.astro';
+import PageMasthead from '../../components/PageMasthead.astro';
+import { topics, type Topic } from '../../data/topics';
+import {
+  articleCountLabel,
+  articleUrl,
+  estimateReadingTime,
+  formatDate,
+  formatReadingTime,
+  getPublishedArticles,
+  getTopicCounts,
+} from '../../lib/articles';
+import { absoluteUrl, withBase } from '../../lib/paths';
+
+export function getStaticPaths() {
+  return topics.map((topic) => ({
+    params: { topic: topic.slug },
+    props: { topic },
+  }));
+}
+
+interface Props {
+  topic: Topic;
+}
+
+const { topic } = Astro.props;
+const articles = await getPublishedArticles();
+const counts = getTopicCounts(articles);
+const topicArticles = articles.filter((article) => article.data.category === topic.slug);
+const [lead, ...rest] = topicArticles;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: `${topic.name} — Brine`,
+  description: topic.intro,
+  url: absoluteUrl(`/topics/${topic.slug}/`),
+  inLanguage: 'en-GB',
+  about: topic.name,
+  hasPart: topicArticles.map((article) => ({
+    '@type': 'Article',
+    headline: article.data.title,
+    url: absoluteUrl(articleUrl(article)),
+    datePublished: article.data.publishedAt.toISOString(),
+  })),
+};
+---
+
+<BaseLayout title={topic.name} description={topic.intro} jsonLd={jsonLd}>
+  <PageMasthead
+    eyebrow={`Topic ${topic.number}`}
+    title={topic.name}
+    intro={topic.intro}
+    meta={articleCountLabel(topicArticles.length)}
+  >
+    <Fragment slot="aside">
+      <a class="text-link masthead-link" href={withBase('/topics/')}>
+        <Icon name="arrow-left" size={15} />
+        All topics
+      </a>
+    </Fragment>
+  </PageMasthead>
+
+  <section class="topic-stories" aria-labelledby="topic-stories-title">
+    <div class="container container--wide">
+      <h2 class="visually-hidden" id="topic-stories-title">Stories in {topic.name}</h2>
+
+      {lead ? (
+        <>
+          <article class="topic-lead" data-reveal>
+            <a
+              class="topic-lead__media"
+              href={articleUrl(lead)}
+              aria-label={`Read “${lead.data.title}”`}
+            >
+              <Image
+                class="topic-lead__image"
+                src={lead.data.cover}
+                alt={lead.data.coverAlt}
+                widths={[720, 1080, 1440]}
+                sizes="(max-width: 900px) 100vw, 58vw"
+                quality={85}
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                style={`object-position: ${lead.data.coverPosition}`}
+              />
+            </a>
+
+            <div class="topic-lead__body">
+              <div class="topic-lead__meta">
+                <span class="kicker">{topic.name}</span>
+                <span class="topic-lead__meta-sep" aria-hidden="true">/</span>
+                <span>{formatReadingTime(estimateReadingTime(lead.body))}</span>
+              </div>
+              <h3 class="topic-lead__title">
+                <a href={articleUrl(lead)}>{lead.data.title}</a>
+              </h3>
+              <p class="topic-lead__copy">{lead.data.description}</p>
+              <div class="topic-lead__footer">
+                <time datetime={lead.data.publishedAt.toISOString()}>
+                  {formatDate(lead.data.publishedAt, 'short')}
+                </time>
+                <span aria-hidden="true">·</span>
+                <span>{lead.data.author}</span>
+              </div>
+              <a class="topic-lead__cta" href={articleUrl(lead)}>
+                Read the story
+                <Icon name="arrow-right" size={16} />
+              </a>
+            </div>
+          </article>
+
+          {rest.length > 0 && (
+            <div class="topic-rest">
+              <div class="topic-rest__head">
+                <p class="eyebrow">More in {topic.name}</p>
+                <p class="topic-rest__count">{articleCountLabel(rest.length)}</p>
+              </div>
+              <div class="topic-rest__grid">
+                {rest.map((article, index) => (
+                  <div data-reveal style={`--reveal-delay: ${index * 60}ms`}>
+                    <ArticleCard article={article} index={index + 1} headingLevel="h3" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <div class="topic-empty">
+          <p class="topic-empty__title">No stories in this topic yet.</p>
+          <p>We are reading, thinking, and will publish something here soon.</p>
+          <a class="text-link" href={withBase('/journal/')}>
+            Browse the journal
+            <Icon name="arrow-right" size={15} />
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="other-topics" aria-labelledby="other-topics-title">
+    <div class="container container--wide">
+      <div class="other-topics__head">
+        <p class="eyebrow">Keep exploring</p>
+        <h2 class="other-topics__title" id="other-topics-title">Other topics</h2>
+      </div>
+      <ul class="other-topics__list">
+        {topics
+          .filter((item) => item.slug !== topic.slug)
+          .map((item) => (
+            <li>
+              <a href={withBase(`/topics/${item.slug}/`)}>
+                <span class="other-topics__number" aria-hidden="true">{item.number}</span>
+                <span class="other-topics__name">{item.name}</span>
+                <span class="other-topics__count">{articleCountLabel(counts[item.slug])}</span>
+                <Icon name="arrow-up-right" size={15} />
+              </a>
+            </li>
+          ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .masthead-link {
+    margin-top: 1.4rem;
+  }
+
+  .topic-stories {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .topic-lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .topic-lead__media {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-xs);
+    background: var(--surface-2);
+    aspect-ratio: 4 / 3;
+  }
+
+  .topic-lead__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1000ms var(--ease-out);
+  }
+
+  .topic-lead__media:hover .topic-lead__image {
+    transform: scale(1.018);
+  }
+
+  .topic-lead__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    color: var(--muted);
+  }
+
+  .topic-lead__meta-sep {
+    color: var(--line-strong);
+  }
+
+  .topic-lead__title {
+    max-width: 16ch;
+    margin-top: 0.85rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 1.6rem + 2vw, 3.4rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .topic-lead__title a {
+    transition: color var(--duration-fast) ease;
+  }
+
+  .topic-lead__title a:hover {
+    color: var(--accent);
+  }
+
+  .topic-lead__copy {
+    max-width: 34rem;
+    margin-top: 0.9rem;
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  .topic-lead__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 1.2rem;
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    color: var(--muted);
+  }
+
+  .topic-lead__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.4rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--ink);
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition:
+      color var(--duration-fast) ease,
+      border-color var(--duration-fast) ease;
+  }
+
+  .topic-lead__cta:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .topic-lead__cta svg {
+    transition: transform var(--duration) var(--ease-out);
+  }
+
+  .topic-lead__cta:hover svg {
+    transform: translateX(4px);
+  }
+
+  .topic-rest {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .topic-rest__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .topic-rest__count {
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    color: var(--muted);
+  }
+
+  .topic-rest__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .topic-empty {
+    padding: 4rem 0;
+    text-align: center;
+  }
+
+  .topic-empty__title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+  }
+
+  .topic-empty p:not(.topic-empty__title) {
+    margin-top: 0.5rem;
+    color: var(--muted);
+  }
+
+  .topic-empty .text-link {
+    margin-top: 1.4rem;
+  }
+
+  .other-topics {
+    margin-top: var(--section-space);
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .other-topics__head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .other-topics__title {
+    margin-top: 0.6rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 1.5rem + 1.2vw, 2.4rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .other-topics__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 5vw, 5rem);
+    border-top: 1px solid var(--line);
+  }
+
+  .other-topics__list li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .other-topics__list a {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto 1rem;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.9rem 0.35rem;
+    margin-inline: -0.35rem;
+    border-radius: var(--radius-xs);
+    transition: background-color var(--duration-fast) ease;
+  }
+
+  .other-topics__list a:hover {
+    background: var(--accent-soft);
+  }
+
+  .other-topics__number {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    color: var(--muted);
+  }
+
+  .other-topics__name {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .other-topics__count {
+    font-family: var(--font-ui);
+    font-size: 0.625rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .other-topics__list svg {
+    color: var(--muted);
+    transition:
+      transform var(--duration) var(--ease-out),
+      color var(--duration-fast) ease;
+  }
+
+  .other-topics__list a:hover svg {
+    transform: translate(2px, -2px);
+    color: var(--accent);
+  }
+
+  @media (max-width: 900px) {
+    .topic-lead {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .topic-lead__title {
+      max-width: 20ch;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .topic-rest__grid,
+    .other-topics__list {
+      grid-template-columns: 1fr;
+    }
+
+    .other-topics__head {
+      align-items: start;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .other-topics__list a {
+      grid-template-columns: 1.6rem minmax(0, 1fr) 1rem;
+    }
+
+    .other-topics__count {
+      display: none;
+    }
+  }
+</style>
